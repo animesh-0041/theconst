@@ -93,12 +93,12 @@ export const Navbar = (props) => {
 
                         <div className="md:hidden block">
                             <PageNavigation url="/search">
-                                <GoSearch className="text-black-75 size-5 md:size-6 md:hidden block" />
+                                <GoSearch className="md:p-1 text-black-75 size-6 md:size-8 rounded-full hover:bg-black-25 active:bg-black-50" />
                             </PageNavigation>
                         </div>
 
                         <PageNavigation url="/notification">
-                            <PiBellSimpleLight className="md:p-1 text-black-75 size-5 md:size-8 rounded-full hover:bg-black-25 active:bg-black-50" />
+                            <PiBellSimpleLight className="md:p-1 text-black-75 size-6 md:size-8 rounded-full hover:bg-black-25 active:bg-black-50" />
                         </PageNavigation>
 
                         <button
@@ -153,14 +153,12 @@ export const Navbar = (props) => {
                     :
                     <div className="w-fit flex flex-row justify-between items-center gap-3 md:gap-4">
 
-                        <div className="md:hidden block">
-                            <PageNavigation url="/search">
-                                <GoSearch className="text-black-75 size-5 md:size-6 md:hidden block" />
-                            </PageNavigation>
-                        </div>
+                        <PageNavigation url="/search">
+                            <GoSearch className="md:p-1 text-black-75 size-6 md:size-8 rounded-full hover:bg-black-25 active:bg-black-50" />
+                        </PageNavigation>
 
                         <PageNavigation url="/notification">
-                            <PiBellSimpleLight className="md:p-1 text-black-75 size-5 md:size-8 rounded-full hover:bg-black-25 active:bg-black-50" />
+                            <PiBellSimpleLight className="md:p-1 text-black-75 size-6 md:size-8 rounded-full hover:bg-black-25 active:bg-black-50" />
                         </PageNavigation>
 
                         <button

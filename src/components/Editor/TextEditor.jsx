@@ -181,6 +181,7 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
         if (!file) return;
 
         const params = {
+            // eslint-disable-next-line no-undef
             Bucket: process.env.REACT_APP_BUCKET_NAME,
             Key: file.name,
             Body: file,

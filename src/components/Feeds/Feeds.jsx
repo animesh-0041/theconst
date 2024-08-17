@@ -22,7 +22,7 @@ export const Feeds = () => {
         queryFn: ({ pageParam = 1 }) => GetPostData(`?page=${pageParam}&limit=300`),
         getNextPageParam: (lastPage, allPages) => {
             if (lastPage?.length === 10) {
-                return allPages.length + 1;
+                return allPages?.length + 1;
             } else {
                 return undefined;
             }

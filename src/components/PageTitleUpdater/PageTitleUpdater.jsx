@@ -41,7 +41,7 @@ export const PageTitleUpdater = () => {
     useEffect(() => {
         switch (location.pathname) {
             case '/':
-                document.title = 'Blogg';
+                document.title = 'Const';
                 break;
             case '/notification':
                 document.title = extractTextFromPath(location.pathname);

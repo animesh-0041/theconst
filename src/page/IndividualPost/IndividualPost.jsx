@@ -17,7 +17,7 @@ import { PageNavigation } from '../../components/common/PageNavigation/PageNavig
 import { useErrorHandler } from '../../components/Helper/StatusManager.jsx';
 import { Content } from '../../components/Content/Content.jsx';
 import { validMyprofile } from '../../components/Helper/Helper.js';
-
+import { HiDotsVertical } from "react-icons/hi";
 
 
 export const IndividualPost = () => {
@@ -71,7 +71,7 @@ export const IndividualPost = () => {
                     <PageNavigation url={`/${PostData?.userDetails?.username}`}>
                         <img
                             src={PostData?.userDetails?.photoURL || 'https://cdn-icons-png.flaticon.com/128/1999/1999625.png'}
-                            className='w-10 h-10 block rounded'
+                            className='w-8 h-8 md:w-10 md:h-10 block rounded-full'
                             onError={(e) => e.target.src = 'https://cdn-icons-png.flaticon.com/128/1999/1999625.png'}
                         />
                     </PageNavigation>
@@ -82,8 +82,15 @@ export const IndividualPost = () => {
                     </div>
                 </div>
 
-                <div className='block md:hidden'>
-                    <BlogFunc type={'like'} onClick={() => handleLiked()} renderType={PostData?.isLikeByUser} />
+                <div className='w-fit flex flex-row gap-3 items-center'>
+                    <div className='block md:hidden'>
+                        <BlogFunc type={'like'} onClick={() => handleLiked()} renderType={PostData?.isLikeByUser} />
+                    </div>
+                    <div className='block md:hidden'>
+                        <PopupDropDown type={validMenuType()} blogUrl={url} redirect>
+                            <HiDotsVertical className='cursor-pointer text-black-75' size={'21px'} />
+                        </PopupDropDown>
+                    </div>
                 </div>
                 <div onClick={CopyToClipboard} className='w-fit hidden md:flex flex-row items-center gap-4'>
                     <Tooltips value={'Copy Link'}>
@@ -112,15 +119,12 @@ export const IndividualPost = () => {
             <div id="hide_scrollbar" className='relative w-full h-content px-4 flex flex-col items-end md:items-center gap-5 overflow-x-scroll'>
                 {PostLoading && <div className='w-fit m-auto'>Loading...</div>}
 
-                {PostData && <div className='fixed bottom-3 left-4 md:right-3 md:left-0 z-[5] font-Golos font-normal text-[11px] leading-3 text-black-200'>Author • {PostData.createdBy}</div>}
+                {PostData && <div className='hidden md:flex fixed right-4 bottom-3 z-[5] font-Golos font-normal text-[11px] leading-3 text-black-200'>Author • {PostData.createdBy}</div>}
 
                 {PostData && <div className='w-full md:w-[60%] flex flex-col items-center gap-4 md:gap-5 mt-6 md:mt-10'>
                     {PostData && PostData?.content.map((block, ind) => (
                         <Content key={ind} block={block} />
                     ))}
-                    <>
-                        <div className='w-full flex flex-row justify-center items-center py-5 text-2xl font-bold text-black-75'>- - -</div>
-                    </>
                 </div>}
 
                 <div className='hidden w-full md:w-fit md:absolute top-1/2 left-4 transform -translate-y-1/2 md:flex flex-row md:flex-col items-center justify-between md:justify-center gap-8'>

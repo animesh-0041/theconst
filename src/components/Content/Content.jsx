@@ -1,5 +1,5 @@
 import React from "react";
-import { CopyBlock } from "react-code-blocks";
+import { CopyBlock, dracula } from "react-code-blocks";
 import ReactPlayer from 'react-player/youtube';
 
 
@@ -82,7 +82,7 @@ export const Content = ({ block }) => {
                                     showLineNumbers={false}
                                     wrapLines={true}
                                     codeBlock={true}
-                                // theme={dracula}
+                                theme={dracula}
                                 />
                             </div>
                         );

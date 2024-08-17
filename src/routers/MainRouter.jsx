@@ -46,10 +46,10 @@ export const MainRouter = () => {
         <Route element={<PrivateRoute />}>
           <Route path="/write" element={<WritePost />} />
           <Route path="/edit/:url" element={<EditPost />} />
+          <Route path="/bookmark" element={<Bookmark />} />
 
           {/* ------------------------------------ last date to update 2 sep ---------------------------------- */}
           {/* <Route path="/messages" element={<MessagesHome />} /> */}
-          {/* <Route path="/bookmark" element={<Bookmark />} /> */}
           <Route path="/settings" element={<Settings />} />
         </Route>
 
