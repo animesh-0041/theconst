@@ -46,7 +46,7 @@ export const FeedProfile = (props) => {
     }
 
     return (
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-row justify-between items-center md:items-start">
             <div className="w-fit flex flex-row items-center gap-3">
                 <div>
                     <PopupDropDown
