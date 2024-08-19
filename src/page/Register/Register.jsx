@@ -250,7 +250,7 @@ export const Register = () => {
             className={`w-full h-screen flex relative flex-col text-left shrink-0 gap-6 bg-black-0`}
         >
             <div className="w-full h-screen border flex flex-row justify-between">
-                <div className="w-full max-w-[600px] relative flex justify-center items-center gap-10">
+                <div className='w-full relative flex flex-col justify-center items-center gap-10'>
                     {/* OUR LOGO */}
                     <PageNavigation url={"/"}>
                         <div className="w-fit absolute top-2 left-6 font-Golos text-2xl font-bold leading-7 text-black-700">
@@ -360,7 +360,9 @@ export const Register = () => {
                     </div>
                 </div>
 
-                <div className="w-full border bg-black-50"></div>
+                <div className='w-full hidden md:flex border bg-black-50'>
+
+                </div>
             </div>
             {isloadingModel && <LoadingModal />}
         </div>

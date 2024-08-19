@@ -82,7 +82,7 @@ export const Content = ({ block }) => {
                                     showLineNumbers={false}
                                     wrapLines={true}
                                     codeBlock={true}
-                                theme={dracula}
+                                    theme={dracula}
                                 />
                             </div>
                         );
@@ -96,6 +96,7 @@ export const Content = ({ block }) => {
                                     showLineNumbers={false}
                                     wrapLines={true}
                                     codeBlock={true}
+                                    theme={dracula}
                                 />
                             </div>
                         );
