@@ -33,8 +33,6 @@ export const MainRouter = () => {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/:user" element={<Profile />} />
 
-        {/* ------------------------------------ last date to update 2 sep ---------------------------------- */}
-        {/* <Route path="/book/:url" element={<Books />} /> */}
 
         {/* Public Routes */}
         <Route element={<PublicRoute />}>
@@ -42,16 +40,16 @@ export const MainRouter = () => {
           <Route path="/register" element={<Register />} />
         </Route>
 
+
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
           <Route path="/write" element={<WritePost />} />
           <Route path="/edit/:url" element={<EditPost />} />
           <Route path="/bookmark" element={<Bookmark />} />
-
-          {/* ------------------------------------ last date to update 2 sep ---------------------------------- */}
-          {/* <Route path="/messages" element={<MessagesHome />} /> */}
           <Route path="/settings" element={<Settings />} />
+          <Route path="/messages" element={<MessagesHome />} />
         </Route>
+
 
         {/* Catch-all route to handle unknown URLs */}
         <Route path="*" element={<Navigate to="/" replace />} />

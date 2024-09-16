@@ -17,6 +17,7 @@ import DragDrop from 'editorjs-drag-drop';
 import AWS from '../../config/awsConfig'; // Adjust the path as per your project structure
 import InlineImage from 'editorjs-inline-image'; // Import the plugin
 import YouTubeEmbed from 'editorjs-youtube-embed'; // Import the YouTube embed plugin
+import InlineCode from '@editorjs/inline-code'; // Import the InlineCode tool
 
 // Custom wrapper to handle alias for YouTubeEmbed tool
 class CustomYouTubeEmbed {
@@ -125,6 +126,10 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
                     marker: {
                         class: Marker,
                         shortcut: 'CMD+SHIFT+M',
+                    },
+                    inlineCode: { // Add inlineCode tool
+                        class: InlineCode,
+                        shortcut: 'CMD+SHIFT+C',
                     },
                     linkTool: {
                         class: LinkTool,
