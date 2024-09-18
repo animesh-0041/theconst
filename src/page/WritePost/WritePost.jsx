@@ -11,12 +11,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { PostUpload } from "./PostUpload";
 
 export const WritePost = ({ writeType, editData, url }) => {
-    const [contentData, setContentData] = useState();
-    const [isModelOpen, setIsModelOpen] = useState(false);
+    const editorContent = JSON.parse(localStorage.getItem("editorContent")) || null;
     const [isUploadModal, setIsUploadModal] = useState(false);
+    const [isModelOpen, setIsModelOpen] = useState(false);
     const [isBugShow, setIsBugShow] = useState(false);
-    const [postType, setPostType] = useState(["blog"]);
     const [specificTag, setSpecificTag] = useState([]);
+    const [postType, setPostType] = useState(["blog"]);
+    const [contentData, setContentData] = useState();
     const editorInstance = useRef(null);
 
 
@@ -139,14 +140,17 @@ export const WritePost = ({ writeType, editData, url }) => {
         }
     }, [postType])
 
+
     return (
         <Layout search={false} isWrite writeType={writeType} handlePost={() => handleUploadPost()}>
             <div className="w-full h-content relative flex flex-col gap-3 p-4">
                 <div>
                     <TextEditor
                         editorInstance={editorInstance}
+                        draftData={editorContent}
                         writeType={writeType}
-                        editData={editData} />
+                        editData={editData}
+                    />
                 </div>
 
                 <div className="md:w-full w-[95%] max-w-[700px] h-10 fixed bottom-3 left-1/2 transform -translate-x-1/2 z-10">
