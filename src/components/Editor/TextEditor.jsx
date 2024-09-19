@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import EditorJS from '@editorjs/editorjs';
+import debounce from 'lodash.debounce'; // Import debounce from lodash (or implement your own debounce function)
 import Header from '@editorjs/header';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
@@ -14,11 +15,11 @@ import RawTool from '@editorjs/raw';
 import Warning from '@editorjs/warning';
 import Checklist from '@editorjs/checklist';
 import DragDrop from 'editorjs-drag-drop';
-import AWS from '../../config/awsConfig'; // Adjust the path as per your project structure
-import InlineImage from 'editorjs-inline-image'; // Import the plugin
-import YouTubeEmbed from 'editorjs-youtube-embed'; // Import the YouTube embed plugin
+import AWS from '../../config/awsConfig';
+import InlineImage from 'editorjs-inline-image';
+import YouTubeEmbed from 'editorjs-youtube-embed';
+import InlineCode from '@editorjs/inline-code';
 
-// Custom wrapper to handle alias for YouTubeEmbed tool
 class CustomYouTubeEmbed {
     constructor({ data, config, api, readOnly }) {
         this.youTubeEmbed = new YouTubeEmbed({ data, config, api, readOnly });
@@ -41,7 +42,7 @@ class CustomYouTubeEmbed {
     }
 }
 
-export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
+export const TextEditor = ({ editorInstance = null, writeType, editData, draftData }) => {
 
     const contentManager = () => {
         switch (writeType) {
@@ -64,7 +65,7 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
                     },
                 ];
             default:
-                return [
+                return draftData ? draftData : [
                     {
                         type: 'header',
                         data: {
@@ -80,7 +81,16 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
                     },
                 ];
         }
-    }
+    };
+
+    const saveToLocalStorage = debounce((editorInstance) => {
+        editorInstance.save().then((outputData) => {
+            localStorage.setItem('editorContent', JSON.stringify(outputData.blocks));
+            console.log('Data saved to localStorage:', outputData.blocks);
+        }).catch((error) => {
+            console.error('Saving failed:', error);
+        });
+    }, 700);
 
     useEffect(() => {
         const initEditor = () => {
@@ -108,8 +118,8 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
                             embed: {
                                 display: true,
                             },
-                        }
-                    }, // Include the inline image tool
+                        },
+                    },
                     image: {
                         class: ImageTool,
                         config: {
@@ -125,6 +135,10 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
                     marker: {
                         class: Marker,
                         shortcut: 'CMD+SHIFT+M',
+                    },
+                    inlineCode: {
+                        class: InlineCode,
+                        shortcut: 'CMD+SHIFT+C',
                     },
                     linkTool: {
                         class: LinkTool,
@@ -144,7 +158,7 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
                     },
                     checklist: Checklist,
                     youtubeEmbed: {
-                        class: CustomYouTubeEmbed, // Use the custom YouTube embed tool
+                        class: CustomYouTubeEmbed,
                         config: {
                             placeholder: 'Enter YouTube video link',
                         },
@@ -153,12 +167,13 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
                 data: {
                     blocks: contentManager(),
                 },
-
+                onChange: () => {
+                    saveToLocalStorage(editorInstance.current);
+                },
                 onReady: () => {
-                    new DragDrop(editorInstance.current); // Initialize drag-and-drop
+                    new DragDrop(editorInstance.current);
 
-                    // Focus on the header block
-                    const headerBlockIndex = 0; // assuming the header block is the first one
+                    const headerBlockIndex = 0;
                     const block = editorInstance.current.blocks.getBlockByIndex(headerBlockIndex);
                     if (block) {
                         block.holder.querySelector('.ce-header').focus();
@@ -190,11 +205,8 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
 
         try {
             const parallelUploadS3 = new AWS.S3.ManagedUpload({ params });
-
-            // Start the upload
             const data = await parallelUploadS3.promise();
 
-            // Reset states after upload completes
             return {
                 success: 1,
                 file: {
@@ -202,7 +214,6 @@ export const TextEditor = ({ editorInstance = null, writeType, editData }) => {
                 },
             };
         } catch (error) {
-            // Handle errors
             console.error('Error uploading file:', error);
             return {
                 success: 0,
