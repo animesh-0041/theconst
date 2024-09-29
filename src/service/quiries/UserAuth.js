@@ -122,8 +122,8 @@ export const getfirendList = async () => {
   return data;
 };
 
-export const getFirendHistory = async (url) => {
-  const { data } = await apiServiceWithToken.get(`/chat/history?${url}`);
+export const getFirendHistory = async ({id, page, limit}) => {
+  const { data } = await apiServiceWithToken.get(`/chat/history?friendId=${id}&page=${page}&limit=${limit}`);
   return data;
 };
 

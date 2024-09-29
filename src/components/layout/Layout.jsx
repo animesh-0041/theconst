@@ -68,7 +68,7 @@ export const Layout = (props) => {
       </div>
       <div>
 
-        {/* {ChatManagement()} */}
+        {ChatManagement()}
         {isAuthorizeModel && <AuthorizeModel />}
         {isFooter && <Footer />}
       </div>

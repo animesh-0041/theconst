@@ -1,38 +1,63 @@
 import { useEffect, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import socket from "../../../config/socket";
+import { IoMdAttach } from "react-icons/io";
+import { CheckBoxTogggel } from "../../../components/CheckBoxTogggel/CheckBoxTogggel";
+import { ChatTextArea } from "../../../components/ChatTextArea/ChatTextArea";
 
-export const MessageLayout = ({
-  children,
-  userData,
-  message,
-  handleSend,
-  handleTypeMessage,
-}) => {
+export const MessageLayout = (props) => {
+  const {
+    children,
+    userData,
+    message,
+    handleSend,
+    selectedChat,
+    setSelectedChat,
+    handleTypeMessage,
+  } = props;
   const [onlineUsers, setOnlineUsers] = useState(new Set());
+  const [isTyping, setIsTyping] = useState(false);
 
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSend();
-    }
-  };
 
   // listen for online users
+  // useEffect(() => {
+  //   socket.on("online-users", (users) => {
+  //     setOnlineUsers(new Set(users));
+  //   });
+
+  //   return () => {
+  //     socket.off("online-users");
+  //   };
+  // }, []);
+
   useEffect(() => {
     socket.on("online-users", (users) => {
       setOnlineUsers(new Set(users));
-      console.log(new Set(users));
+    });
+
+    socket.on("typing", ({ typingUsers }) => {
+      console.log(typingUsers, 'isTyping')
+      setIsTyping(typingUsers.includes(userData?._id));
     });
 
     return () => {
       socket.off("online-users");
+      socket.off("typing");
     };
-  }, []);
+  }, [userData?._id]);
+
+  useEffect(() => {
+    setIsTyping(false);
+  }, [userData?._id]);
+
+
+  console.log(isTyping, 'isTyping', userData?._id)
+
 
   return (
-    <div className="w-full px-4 pt-2 h-content flex flex-col gap-0 justify-between">
+    <div className="w-full px-4 pt-1 h-full flex flex-col gap-0 justify-between">
       {/* nav bar */}
-      <nav className="w-full flex flex-row justify-between py-2 border-b border-black-200">
+      <nav className="w-full flex flex-row justify-between items-center py-2 border-b border-black-200">
         <div className="flex flex-row items-center gap-4">
           <img
             className="block w-9 h-9 rounded-full"
@@ -41,8 +66,8 @@ export const MessageLayout = ({
               "https://cdn-icons-png.flaticon.com/128/1999/1999625.png"
             }
             onError={(e) =>
-              (e.target.src =
-                "https://cdn-icons-png.flaticon.com/128/1999/1999625.png")
+            (e.target.src =
+              "https://cdn-icons-png.flaticon.com/128/1999/1999625.png")
             }
           />
           <div className="flex flex-col gap-0">
@@ -54,30 +79,29 @@ export const MessageLayout = ({
             </p>
           </div>
         </div>
+
+        {!!Object.keys(selectedChat)?.length &&
+          <span
+            onClick={() => setSelectedChat({})}
+            className="text-xs font-Golos text-black-500 font-normal cursor-pointer capitalize"
+          >
+            {Object.keys(selectedChat)?.length} selected
+          </span>
+        }
       </nav>
+
       <div
         id="hide_scrollbar"
-        className="w-full h-[calc(100vh-180px)] box-border"
+        className="w-full h-[calc(100vh-108px)] box-border"
       >
         {children}
       </div>
-      {/* text area  */}
-      <div className="w-full relative py-2">
-        <input
-          type="text"
-          value={message}
-          onKeyPress={handleKeyPress}
-          onChange={handleTypeMessage}
-          placeholder="Write a message..."
-          className="w-full px-4 py-3 border border-black-50 outline-none rounded font-Golos text-xs text-black-700 bg-white"
-        />
-        <button
-          onClick={() => handleSend()}
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 rounded-full bg-orange-400 px-3 py-1 font-Golos font-normal text-sm active:bg-orange-500 text-white"
-        >
-          <IoSend size={20} className="text-white" />
-        </button>
-      </div>
+
+      <ChatTextArea
+        value={message}
+        handleSend={handleSend}
+        handleTypeMessage={handleTypeMessage}
+      />
     </div>
   );
 };

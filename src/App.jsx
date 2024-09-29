@@ -13,7 +13,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <UserProvider>
         <MainRouter />
-        {/* <ReactQueryDevtools initialIsOpen={false} position="left" /> */}
+        {/* <ReactQueryDevtools initialIsOpen={false} position="bottom" /> */}
         </UserProvider>
     </QueryClientProvider>
   );

@@ -43,7 +43,8 @@ export const Feeds = () => {
 
     useEffect(() => {
         if (PostData) {
-            const lastPage = PostData.pages[PostData.pages.length - 1];
+            const lastPage = PostData?.pages?.[PostData?.pages?.length - 1];
+
             if (lastPage?.length < 10) {
                 setHasMore(false);
             }
@@ -53,7 +54,6 @@ export const Feeds = () => {
     if (PostLoading) {
         return <div className="w-full text-center m-auto">Loading...</div>
     }
-
 
     return (
         <div id="hide_scrollbar" className="w-full h-full flex flex-col gap-6 px-2 overflow-scroll">

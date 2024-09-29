@@ -11,7 +11,6 @@ import { FaBirthdayCake, FaUser } from "react-icons/fa";
 import { MdLocationPin } from "react-icons/md";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getProfileBlog, updateProfile } from "../../../service/quiries/UserAuth.js";
-import { BiSolidPencil } from "react-icons/bi";
 
 
 const editProfile = [

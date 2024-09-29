@@ -4,33 +4,13 @@ import { PageNavigation } from '../PageNavigation/PageNavigation';
 import { deleteBlog } from '../../../service/quiries/UserAuth';
 import { useErrorHandler } from '../../Helper/StatusManager';
 import { AnimatePresence, motion } from 'framer-motion';
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { MdOutlineDelete } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
-import { LiaEditSolid } from "react-icons/lia";
 import { Breaker } from '../Breaker/Breaker';
-import { GoShare } from "react-icons/go";
 import { useState } from 'react';
 import { DeleteModal } from '../../DeleteModal/DeleteModal';
+import { useNavigate } from 'react-router-dom';
+import { bookMenuList, chatMenuList, feedmenulist, profilemenulist } from './PopupDropDownList';
 
-const feedmenulist = [
-    { title: "Recommend more stories like this to me.", icon: <IoIosAddCircleOutline size={"22px"} className='text-black-75' /> },
-    { title: "Recommend fewer stories like this to me.", icon: <IoIosAddCircleOutline size={"22px"} className='text-black-75' /> },
-    { title: "BREAK", icon: "" },
-    { title: "Follow Author", icon: "" },
-    { title: "Copy Link", icon: "" },
-];
 
-const profilemenulist = [
-    { title: "edit", icon: <LiaEditSolid size={"22px"} className='text-black-75' /> },
-    { title: "share", icon: <GoShare size={"22px"} className='text-black-75' /> },
-    { title: "delete", icon: <MdOutlineDelete size={"22px"} className='text-red-400' />, color: 'text-red-400 active:text-red-300' },
-];
-
-const bookMenuList = [
-    { title: "rename", icon: <LiaEditSolid size={"22px"} className='text-black-75' /> },
-    { title: "delete", icon: <MdOutlineDelete size={"22px"} className='text-red-400' />, color: 'text-red-400 active:text-red-300' },
-];
 
 const ListHandler = ({ props }) => {
     const { title, icon, color } = props;
@@ -48,7 +28,20 @@ const ListHandler = ({ props }) => {
 };
 
 export const PopupDropDown = (props) => {
-    const { children, type, icon, name, followers, username, blogUrl, onClick, queryType = null, redirect } = props;
+    const {
+        type,
+        icon,
+        name,
+        blogUrl,
+        onClick,
+        children,
+        username,
+        redirect, 
+        position,
+        followers,
+        isDisable = false,
+        queryType = null,
+    } = props;
     const [isDeleteModal, setIsDeleteModal] = useState(false);
     const handleError = useErrorHandler();
     const queryClient = useQueryClient();
@@ -97,7 +90,7 @@ export const PopupDropDown = (props) => {
         }
     };
 
-    const PopupContent = (open) => {
+    const PopupContent = (open, close) => {
         switch (type) {
             case 'UserProfile':
                 return (
@@ -155,7 +148,7 @@ export const PopupDropDown = (props) => {
                                 anchor="bottom end"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                {feedmenulist && feedmenulist.map((item, index) => (
+                                {feedmenulist && feedmenulist?.map((item, index) => (
                                     <div key={index} className='w-full flex flex-col px-2'>
                                         <ListHandler props={item} />
                                     </div>
@@ -179,7 +172,7 @@ export const PopupDropDown = (props) => {
                                     anchor="bottom end"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    {profilemenulist && profilemenulist.map((item, index) => (
+                                    {profilemenulist && profilemenulist?.map((item, index) => (
                                         <div
                                             key={index}
                                             onClick={() => handleRedirect(item?.title)}
@@ -216,8 +209,8 @@ export const PopupDropDown = (props) => {
                                 anchor="bottom"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                {bookMenuList && bookMenuList.map((item, index) => (
-                                    <div key={index} onClick={onClick[index] || null} className='w-full flex flex-col px-2'>
+                                {bookMenuList && bookMenuList?.map((item, index) => (
+                                    <div key={index} onClick={onClick?.[index] || null} className='w-full flex flex-col px-2'>
                                         <ListHandler props={item} />
                                     </div>
                                 ))}
@@ -225,17 +218,47 @@ export const PopupDropDown = (props) => {
                         )}
                     </AnimatePresence>
                 );
+            case 'chatMenu':
+                return (
+                    <AnimatePresence>
+                        {open && (
+                            <PopoverPanel
+                                static
+                                as={motion.div}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="w-[140px] origin-top flex flex-col gap-2 rounded px-1 py-2 bg-black-700 shadow-header shadow-slate-300 [--anchor-gap:8px]"
+                                anchor={position}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {chatMenuList && chatMenuList?.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className='w-full flex flex-col px-2'
+                                        onClick={(event) => { onClick[index](event) || null; close() }}
+                                    >
+                                        <ListHandler props={item} />
+                                    </div>
+                                ))}
+                            </PopoverPanel>
+                        )}
+                    </AnimatePresence>
+                );
+
             default:
                 return null;
         }
     };
 
+    if(isDisable) return children;
+
     return (
         <Popover className="relative">
-            {({ open }) => (
+            {({ open, close }) => (
                 <>
                     <PopoverButton className="flex items-center gap-2">{children}</PopoverButton>
-                    {PopupContent(open)}
+                    {PopupContent(open, close)}
                 </>
             )}
         </Popover>
